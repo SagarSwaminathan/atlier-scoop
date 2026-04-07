@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1E3328">
+<title>Atelier Scoops — Rewards</title>
+<meta name="description" content="Premium artisan ice cream loyalty app. Earn points, unlock secret flavors, pay with your wallet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --f:1E3328;--f2:#2A4A38;--g:#B8922A;--g2:#FAEEDA;--gt:#633806;
+  --ink:#1A1A18;--iv:#FAF7F2;--iv2:#F0EBE0;--iv3:#E8E2D6;
+  --st:#8A8578;--st2:#C8C3B8;--bd:rgba(30,51,40,0.12);--bd2:rgba(30,51,40,0.2);
+}
+html,body{font-family:'Jost',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;background:#1E3328;overscroll-behavior:none;height:100%}
+.serif{font-family:'Cormorant Garamond',serif}
+.ns::-webkit-scrollbar{display:none}
+.ns{-ms-overflow-style:none;scrollbar-width:none}
+.tap{transition:transform .1s}
+.tap:active{transform:scale(0.96)}
+
+/* ── PHONE FRAME (desktop) ── */
+.desktop{display:none}
+.mobile{display:flex;flex-direction:column;height:100dvh}
+
+@media(min-width:600px){
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:32px 16px}
+  .desktop{display:flex;align-items:center;gap:56px}
+  .mobile{display:none}
+  .phone-wrap{width:375px;height:812px;border-radius:44px;overflow:hidden;border:8px solid #0D1A12;position:relative;flex-shrink:0;box-shadow:0 40px 80px rgba(0,0,0,0.55)}
+  .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#0D1A12;border-radius:0 0 18px 18px;z-index:20}
+  .phone-inner{height:100%;display:flex;flex-direction:column}
+  .side-info{max-width:280px;color:#FAF7F2}
+}
+
+/* ── APP SHELL ── */
+.app{display:flex;flex-direction:column;height:100%;background:#F5F0E8;position:relative;overflow:hidden}
+
+/* ── STATUS BAR ── */
+.sbar{height:44px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 22px 8px;flex-shrink:0;background:#1E3328}
+.sbar-time{font-size:14px;font-weight:500;color:#FAF7F2}
+.sbar-icons{display:flex;gap:5px;align-items:center}
+
+/* ── TOP BAR ── */
+.tbar{height:52px;background:#1E3328;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0}
+.tbar-brand{font-family:'Cormorant Garamond',serif;color:#FAF7F2;font-size:18px;font-weight:500;letter-spacing:.1em;display:flex;align-items:center;gap:6px}
+.gem{width:5px;height:5px;border-radius:50%;background:#B8922A;flex-shrink:0}
+.tbar-icons{display:flex;gap:14px;align-items:center}
+.bell-btn{background:none;border:none;cursor:pointer;position:relative;width:24px;height:24px;display:flex;align-items:center;justify-content:center;padding:0}
+.bell-btn svg{stroke:#FAF7F2}
+.badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;background:#B8922A;border-radius:50%;font-size:9px;font-weight:500;color:#FAF7F2;display:flex;align-items:center;justify-content:center;border:2px solid #1E3328;font-family:'Jost',sans-serif}
+.av-btn{width:28px;height:28px;border-radius:50%;background:#B8922A;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;color:#FAF7F2;display:flex;align-items:center;justify-content:center}
+
+/* ── SCROLL AREA ── */
+.scroll-area{flex:1;overflow-y:auto;padding:16px}
+
+/* ── BOTTOM TABS ── */
+.btabs{height:72px;background:#FAF7F2;border-top:1px solid rgba(30,51,40,0.1);display:flex;align-items:stretch;padding-bottom:8px;flex-shrink:0}
+.bt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;cursor:pointer;padding-top:6px}
+.bt svg{width:22px;height:22px;fill:none;stroke:#C8C3B8;stroke-width:1.6;transition:stroke .15s}
+.bt span{font-family:'Jost',sans-serif;font-size:10px;font-weight:400;color:#C8C3B8;letter-spacing:.04em;transition:color .15s}
+.bt .dot{width:4px;height:4px;border-radius:50%;background:transparent;transition:background .15s}
+.bt.on svg{stroke:#1E3328}
+.bt.on span{color:#1E3328;font-weight:500}
+.bt.on .dot{background:#B8922A}
+
+/* ── SCREENS ── */
+.screen{display:none;animation:fadeIn .18s ease}
+.screen.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SHARED COMPONENTS ── */
+.sec-head{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#1A1A18;letter-spacing:.03em;padding-bottom:10px;border-bottom:1px solid rgba(30,51,40,0.12);margin-bottom:12px}
+.lbl{font-size:10px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:#8A8578;font-family:'Jost',sans-serif}
+.card{background:#FAF7F2;border:1px solid rgba(30,51,40,0.12);border-radius:14px;padding:14px;margin-bottom:10px}
+
+/* ── WALLET HERO ── */
+.w-hero{background:#1E3328;border-radius:20px;padding:22px 20px;margin-bottom:14px;position:relative;overflow:hidden}
+.w-hero::after{content:'';position:absolute;top:-30px;right:-30px;width:140px;height:140px;border-radius:50%;border:1px solid rgba(184,146,42,0.12)}
+.w-hero::before{content:'';position:absolute;bottom:-50px;right:16px;width:110px;height:110px;border-radius:50%;border:1px solid rgba(184,146,42,0.07)}
+.w-eye{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,247,242,0.4);margin-bottom:5px;font-family:'Jost',sans-serif}
+.w-bal{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:500;color:#FAF7F2;line-height:1}
+.w-bal sup{font-size:18px;font-weight:400;vertical-align:super}
+.w-foot{display:flex;align-items:flex-end;justify-content:space-between;margin-top:14px}
+.w-name{color:rgba(250,247,242,0.45);font-size:11px;font-family:'Jost',sans-serif;letter-spacing:.05em}
+.w-tier{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#B8922A;border:1px solid rgba(184,146,42,0.4);padding:2px 9px;border-radius:2px;font-family:'Jost',sans-serif}
+
+/* ── ACTION GRID ── */
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.act-btn{padding:12px 8px;border-radius:12px;border:1px solid rgba(30,51,40,0.15);background:#FAF7F2;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.act-btn.dark{background:#1E3328;border-color:#1E3328}
+.act-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.act-ico svg{width:16px;height:16px;fill:none;stroke-width:1.8}
+.act-lbl{font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1A1A18;font-weight:400}
+.act-btn.dark .act-lbl{color:#FAF7F2}
+
+/* ── PROGRESS ── */
+.prog-track{background:rgba(30,51,40,0.1);border-radius:20px;height:3px;margin:10px 0 5px;overflow:hidden}
+.prog-fill{height:100%;border-radius:20px;background:#B8922A;animation:progFill .8s ease}
+@keyframes progFill{from{width:0}}
+.prog-labels{display:flex;justify-content:space-between;font-size:10px;color:#8A8578;font-family:'Jost',sans-serif}
+
+/* ── STAMPS ── */
+.stamps{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.stamp{width:26px;height:26px;border-radius:50%;border:1px solid rgba(30,51,40,0.18);background:#EDE8DC;display:flex;align-items:center;justify-content:center;font-size:10px;color:#B4B2A9}
+.stamp.lit{background:#1E3328;border-color:#1E3328;color:#FAF7F2}
+
+/* ── TRANSACTIONS ── */
+.txn-list{background:#FAF7F2;border:1px solid rgba(30,51,40,0.12);border-radius:14px;overflow:hidden;margin-bottom:10px}
+.txn-head{padding:12px 14px;border-bottom:1px solid rgba(30,51,40,0.08);font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:500;color:#1A1A18}
+.txn{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(30,51,40,0.06)}
+.txn:last-child{border-bottom:none}
+.txn-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:#EDE8DC;color:#8A8578}
+.txn-ico.earn{background:#EAF3EE;color:#0F6E56}
+.txn-info{flex:1}
+.txn-n{font-size:12px;color:#1A1A18;font-family:'Jost',sans-serif}
+.txn-s{font-size:10px;color:#8A8578;margin-top:1px;font-family:'Jost',sans-serif}
+.txn-v{font-size:12px;font-family:'Jost',sans-serif}
+.neg{color:#A32D2D}.pos{color:#0F6E56}
+
+/* ── REWARDS ── */
+.rew-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.rew-card{background:#FAF7F2;border:1px solid rgba(30,51,40,0.15);border-radius:12px;padding:12px;cursor:pointer;position:relative;overflow:hidden;text-align:left}
+.rew-card.feat{border-color:#B8922A}
+.rew-card.locked{opacity:.45;cursor:default}
+.rew-ico{font-size:20px;margin-bottom:6px}
+.rew-name{font-size:12px;color:#1A1A18;font-family:'Jost',sans-serif}
+.rew-pts{font-size:11px;color:#B8922A;margin-top:2px;font-family:'Jost',sans-serif;font-weight:500}
+.feat-tag{position:absolute;top:0;right:0;font-size:8px;letter-spacing:.08em;text-transform:uppercase;background:#FAEEDA;color:#633806;padding:3px 7px;border-bottom-left-radius:6px;font-family:'Jost',sans-serif}
+.lock-tag{position:absolute;top:6px;right:6px;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#8A8578;background:#EDE8DC;padding:2px 5px;border-radius:2px;font-family:'Jost',sans-serif}
+
+/* ── TIER TABLE ── */
+.tier-table{background:#FAF7F2;border:1px solid rgba(30,51,40,0.12);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.tier-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(30,51,40,0.06);font-size:12px;font-family:'Jost',sans-serif;color:#1A1A18}
+.tier-row:last-child{border-bottom:none}
+.tier-row.active{background:#FAEEDA;color:#633806}
+.tier-perk{font-size:10px;color:#8A8578}
+.tier-row.active .tier-perk{color:#854F0B}
+
+/* ── FLAVOR CARDS ── */
+.fl-card{background:#FAF7F2;border:1px solid rgba(30,51,40,0.12);border-radius:14px;overflow:hidden;margin-bottom:10px}
+.fl-hero{height:80px;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative}
+.fl-badge{position:absolute;top:8px;left:8px;font-size:9px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px;font-family:'Jost',sans-serif}
+.fl-badge.dark{background:#1E3328;color:#FAF7F2}
+.fl-badge.gold{background:#FAEEDA;color:#633806;border:1px solid rgba(184,146,42,0.3)}
+.fl-badge.neutral{background:#EDE8DC;color:#8A8578}
+.fl-body{padding:12px 14px}
+.fl-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:#1A1A18}
+.fl-desc{font-size:11px;color:#8A8578;margin-top:3px;line-height:1.5;font-family:'Jost',sans-serif}
+.fl-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.fl-loc{font-size:10px;color:#8A8578;font-family:'Jost',sans-serif;letter-spacing:.04em}
+.fl-cta{background:#1E3328;color:#FAF7F2;border:none;padding:5px 14px;border-radius:3px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+
+/* ── STORE CARDS ── */
+.store-card{background:#FAF7F2;border:1px solid rgba(30,51,40,0.12);border-radius:14px;padding:14px;margin-bottom:10px}
+.store-mark{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#FAF7F2}
+.store-nm{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:#1A1A18}
+.store-ad{font-size:11px;color:#8A8578;margin-top:2px;font-family:'Jost',sans-serif}
+.open-pill{display:inline-block;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;margin-top:4px;font-family:'Jost',sans-serif;background:#EAF3EE;color:#0F6E56}
+.s-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.s-tag{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#8A8578;background:#EDE8DC;padding:2px 7px;border-radius:2px;font-family:'Jost',sans-serif}
+.pay-btn{width:100%;margin-top:10px;padding:11px;background:#1E3328;color:#FAF7F2;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+
+/* ── PROFILE ── */
+.prof-hero{background:#1E3328;border-radius:20px;padding:20px;margin-bottom:12px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.prof-av{width:60px;height:60px;border-radius:50%;background:#B8922A;border:2px solid rgba(184,146,42,0.4);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:#FAF7F2;margin-bottom:10px}
+.prof-nm{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#FAF7F2}
+.prof-mem{font-size:10px;color:rgba(250,247,242,0.45);letter-spacing:.08em;margin-top:3px;font-family:'Jost',sans-serif}
+.prof-tier{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#B8922A;border:1px solid rgba(184,146,42,0.4);padding:3px 10px;border-radius:2px;margin-top:10px;font-family:'Jost',sans-serif}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-c{background:#FAF7F2;border:1px solid rgba(30,51,40,0.12);border-radius:10px;padding:12px}
+.stat-lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8A8578;font-family:'Jost',sans-serif}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;color:#1A1A18;margin-top:2px}
+.stat-sub{font-size:10px;color:#0F6E56;margin-top:1px;font-family:'Jost',sans-serif}
+.bar-sec{background:#FAF7F2;border:1px solid rgba(30,51,40,0.12);border-radius:14px;padding:14px;margin-bottom:10px}
+.bar-title{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8A8578;margin-bottom:12px;font-family:'Jost',sans-serif}
+.brow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.brow:last-child{margin-bottom:0}
+.blbl{font-size:10px;color:#8A8578;width:68px;text-align:right;font-family:'Jost',sans-serif}
+.btrack{flex:1;background:#EDE8DC;border-radius:10px;height:5px;overflow:hidden}
+.bfill{height:100%;border-radius:10px;background:#1E3328;animation:progFill .8s ease}
+.bval{font-size:10px;color:#8A8578;min-width:28px;font-family:'Jost',sans-serif}
+.ref-box{background:#FAF7F2;border:1px solid rgba(30,51,40,0.15);border-radius:14px;padding:16px;text-align:center;cursor:pointer;margin-bottom:12px}
+.ref-code{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;letter-spacing:.2em;color:#1A1A18;margin:6px 0 4px}
+.prof-menu{background:#FAF7F2;border:1px solid rgba(30,51,40,0.12);border-radius:14px;overflow:hidden}
+.menu-row{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border-bottom:1px solid rgba(30,51,40,0.06);cursor:pointer}
+.menu-row:last-child{border-bottom:none}
+.menu-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:10px;flex-shrink:0}
+.menu-ico svg{width:14px;height:14px;fill:none;stroke:#8A8578;stroke-width:1.8}
+.menu-txt{font-size:13px;font-family:'Jost',sans-serif;color:#1A1A18}
+.danger .menu-txt{color:#A32D2D}
+.danger .menu-ico svg{stroke:#A32D2D}
+
+/* ── INBOX ── */
+.inbox-item{background:#FAF7F2;border:1px solid rgba(30,51,40,0.12);border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;gap:10px;cursor:pointer}
+.inbox-item.unread{border-left:2px solid #B8922A;border-radius:0 14px 14px 0}
+.inbox-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ib-warn{background:#FAEEDA;color:#854F0B}
+.ib-ok{background:#EAF3EE;color:#0F6E56}
+.ib-dark{background:#1E3328;color:#FAF7F2}
+.ib-neutral{background:#EDE8DC;color:#8A8578}
+.inbox-title{font-size:12px;font-weight:500;color:#1A1A18;font-family:'Jost',sans-serif;line-height:1.4}
+.inbox-body{font-size:11px;color:#8A8578;margin-top:2px;line-height:1.5;font-family:'Jost',sans-serif}
+.inbox-time{font-size:9px;color:#C8C3B8;margin-top:4px;letter-spacing:.06em;text-transform:uppercase;font-family:'Jost',sans-serif}
+.inbox-back{height:72px;background:#FAF7F2;border-top:1px solid rgba(30,51,40,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.inbox-back button{font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#1E3328;background:none;border:none;cursor:pointer}
+
+/* ── BOTTOM SHEET ── */
+.sheet-overlay{display:none;position:absolute;inset:0;background:rgba(26,26,24,0.6);z-index:50;align-items:flex-end}
+.sheet-overlay.on{display:flex}
+.sheet{background:#FAF7F2;border-radius:20px 20px 0 0;padding:20px;width:100%;animation:sheetUp .28s cubic-bezier(.32,.72,0,1)}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:36px;height:3px;background:rgba(30,51,40,0.2);border-radius:2px;margin:0 auto 16px}
+.sheet-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#1A1A18;text-align:center;margin-bottom:16px}
+.sheet-body{font-size:13px;color:#8A8578;text-align:center;line-height:1.6;margin-bottom:16px;font-family:'Jost',sans-serif}
+.sheet-btn{width:100%;padding:13px;background:#1E3328;color:#FAF7F2;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-bottom:8px}
+.sheet-btn.out{background:transparent;color:#1A1A18;border:1px solid rgba(30,51,40,0.2)}
+.amt-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.amt-opt{padding:12px;border:1px solid rgba(30,51,40,0.15);border-radius:8px;background:#EDE8DC;font-size:14px;font-family:'Jost',sans-serif;color:#1A1A18;cursor:pointer;text-align:center}
+.amt-opt.sel{background:#1E3328;border-color:#1E3328;color:#FAF7F2}
+.qr-frame{background:#1E3328;border-radius:14px;padding:18px;text-align:center;margin-bottom:12px}
+.qr-grid{width:100px;height:100px;background:#FAF7F2;border-radius:6px;margin:0 auto 10px;display:grid;grid-template-columns:repeat(10,1fr);padding:6px;gap:1px}
+.qc{background:#1E3328;border-radius:1px}
+.qc.w{background:#FAF7F2}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     DESKTOP — phone frame + side panel
+═══════════════════════════════════════════ -->
+<div class="desktop">
+  <div class="phone-wrap">
+    <div class="phone-notch"></div>
+    <div class="phone-inner" id="phone-desktop"></div>
+  </div>
+  <div class="side-info">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:500;line-height:1.1;margin-bottom:14px;letter-spacing:.02em">Atelier Scoops<br>Loyalty App</div>
+    <div style="width:32px;height:1px;background:#B8922A;margin-bottom:18px"></div>
+    <p style="font-family:'Jost',sans-serif;font-size:13px;font-weight:300;line-height:1.7;color:rgba(250,247,242,0.6);margin-bottom:22px">Premium artisan ice cream rewards. Earn points, unlock secret flavors, and pay with your wallet across all locations.</p>
+    <div id="feature-list"></div>
+    <div style="margin-top:24px;padding:12px 16px;background:rgba(184,146,42,0.1);border-radius:8px;border:1px solid rgba(184,146,42,0.22)">
+      <div style="font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#B8922A;margin-bottom:4px">Stack</div>
+      <div style="font-family:'Jost',sans-serif;font-size:12px;color:rgba(250,247,242,0.5);line-height:1.6">Vanilla HTML/CSS/JS · Vercel Analytics · Zero dependencies</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MOBILE — full screen
+═══════════════════════════════════════════ -->
+<div class="mobile" id="phone-mobile"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+const FEATURES=[
+  {i:'◈',t:'Points · stamps · tier rewards'},
+  {i:'🔐',t:'Gold & Platinum secret menu'},
+  {i:'▣',t:'In-store QR wallet payment'},
+  {i:'◇',t:'Birthday rewards & referral bonuses'},
+  {i:'🍦',t:'Flavor drop alerts & pre-orders'},
+];
+const REWARDS=[
+  {name:'Single Scoop',pts:150,icon:'🍦',feat:true},
+  {name:'Double Scoop',pts:250,icon:'🍨'},
+  {name:'Artisan Sundae',pts:400,icon:'🍧'},
+  {name:'$5 Credit',pts:500,icon:'◈'},
+  {name:'Signature Shake',pts:600,icon:'🥤'},
+  {name:'Celebration Cake',pts:1200,icon:'🎂',locked:true},
+];
+const FLAVORS=[
+  {e:'🍓',bg:'#FAEEDA',b:'New Drop',bs:'dark',n:'Strawberry Balsamic Swirl',d:'Roasted Florida strawberries with aged balsamic, ribboned through Madagascar vanilla bean.',l:'Both locations',c:'Pre-order'},
+  {e:'🌿',bg:'#EAF3EE',b:'New Drop',bs:'dark',n:'Ceremonial Matcha & Honeycomb',d:'Grade-A matcha with local Florida honey and shards of housemade honeycomb.',l:'Wesley Chapel only',c:'Pre-order'},
+  {e:'🍫',bg:'#1E3328',b:'Gold+ Exclusive',bs:'gold',n:'Dark Miso Chocolate',d:'White miso caramel through 72% dark chocolate gelato. Ask by name — not on the board.',l:'Gold & Platinum members',c:'Notify Me'},
+  {e:'🍑',bg:'#F5EDE3',b:'Returning',bs:'neutral',n:'Georgia Peach Cobbler',d:'Stone fruit ice cream with brown butter crumble and cardamom. Back July–August.',l:'Both locations · Jul–Aug',c:'Pre-order'},
+];
+const STORES=[
+  {n:'Atelier Scoops — Lutz',a:'1842 N Dale Mabry Hwy, Lutz FL 33548',bg:'#1E3328',tags:['Dine In','Take Out','Curbside','WiFi']},
+  {n:'Atelier Scoops — Wesley Chapel',a:'5461 Village Market, Wesley Chapel FL 33544',bg:'#2A4A38',tags:['Dine In','Take Out','Drive-Thru','Patio']},
+];
+const NOTIFS=[
+  {i:'🍓',s:'warn',t:'New drop: Strawberry Balsamic Swirl',b:'Gold members get first access Saturday 9 AM at both locations.',ts:'2h ago',u:true},
+  {i:'◈',s:'ok',t:'760 points from Platinum',b:'Unlock the secret menu, celebration cake, and triple-point Sundays.',ts:'Yesterday',u:true},
+  {i:'✦',s:'dark',t:'Gold exclusive: Dark Miso Chocolate',b:"Ask your scooper — it's not on the board. This week only.",ts:'2 days ago',u:true},
+  {i:'◈',s:'neutral',t:'Birthday reward awaiting',b:'June 1 your gift unlocks — double scoop + $5 wallet credit, all month.',ts:'Apr 3',u:false},
+  {i:'◇',s:'ok',t:'Referral bonus received',b:'Mike joined using SAGAR50. 100 bonus points added to your wallet.',ts:'Apr 3',u:false},
+  {i:'🍑',s:'warn',t:'Georgia Peach Cobbler returning',b:'Pre-orders open now. Available from July 4 at both locations.',ts:'Apr 2',u:false},
+];
+const QR_PAT=[1,1,1,1,1,1,1,0,1,0,1,0,0,0,0,0,0,1,0,1,1,0,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1,0,0,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,1,1,0,1,0,1,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,0,1,1,0,1,0,0,0,0,0,0,1,0];
+
+// ── SVG ICONS ─────────────────────────────────────────────────────────────
+const SVG={
+  wallet:`<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`,
+  star:`<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+  scoop:`<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="9" r="6"/><path d="M9 14l-2 7h10l-2-7"/></svg>`,
+  store:`<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+  person:`<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  bell:`<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
+  plus:`<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  qr:`<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="17" width="3" height="3"/><rect x="14" y="20" width="3" height="1"/></svg>`,
+  gift:`<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>`,
+  chev:`<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>`,
+};
+
+// ── ANALYTICS (Vercel) ────────────────────────────────────────────────────
+function track(event,props){
+  if(window.va) window.va('event',{name:event,...(props||{})});
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let currentTab='wallet';
+let showInbox=false;
+let unread=3;
+let selAmt='$25';
+
+// ── HTML BUILDERS ─────────────────────────────────────────────────────────
+function buildStatusBar(){
+  const now=new Date();
+  const t=`${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  return `<div class="sbar">
+    <span class="sbar-time">${t}</span>
+    <div class="sbar-icons">
+      <svg width="15" height="11" viewBox="0 0 16 12" fill="#FAF7F2"><rect x="0" y="3" width="3" height="9" rx="1"/><rect x="4.5" y="1" width="3" height="11" rx="1"/><rect x="9" y="0" width="3" height="12" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity=".3"/></svg>
+      <svg width="15" height="11" viewBox="0 0 20 14" fill="#FAF7F2"><path d="M10 3C13.5 3 16.7 4.4 19 6.7L17 8.7C15.2 6.9 12.7 6 10 6S4.8 6.9 3 8.7L1 6.7C3.3 4.4 6.5 3 10 3Z"/><path d="M10 7C12.3 7 14.4 7.9 16 9.5L14 11.5C12.9 10.4 11.5 9.8 10 9.8S7.1 10.4 6 11.5L4 9.5C5.6 7.9 7.7 7 10 7Z"/><circle cx="10" cy="13" r="1.5"/></svg>
+      <svg width="24" height="11" viewBox="0 0 25 12"><rect x="0" y="1" width="21" height="10" rx="3" stroke="#FAF7F2" stroke-width="1" fill="none"/><rect x="1.5" y="2.5" width="14" height="7" rx="1.5" fill="#FAF7F2"/><path d="M22 4.5C23.1 4.9 23.1 7.1 22 7.5V4.5Z" fill="#FAF7F2"/></svg>
+    </div>
+  </div>`;
+}
+
+function buildTopBar(){
+  return `<div class="tbar">
+    <div class="tbar-brand"><div class="gem"></div>Atelier Scoops<div class="gem"></div></div>
+    <div class="tbar-icons">
+      <button class="bell-btn tap" onclick="openInbox()">${SVG.bell}${unread>0?`<div class="badge">${unread}</div>`:''}</button>
+      <button class="av-btn tap" onclick="goTab('profile')">SG</button>
+    </div>
+  </div>`;
+}
+
+function buildBottomTabs(){
+  const tabs=[
+    {id:'wallet',label:'Wallet',icon:SVG.wallet},
+    {id:'rewards',label:'Rewards',icon:SVG.star},
+    {id:'flavors',label:'Flavors',icon:SVG.scoop},
+    {id:'stores',label:'Stores',icon:SVG.store},
+    {id:'profile',label:'Profile',icon:SVG.person},
+  ];
+  return `<div class="btabs">${tabs.map(t=>`
+    <button class="bt${currentTab===t.id&&!showInbox?' on':''}" onclick="goTab('${t.id}')">${t.icon}<span>${t.label}</span><div class="dot"></div></button>
+  `).join('')}</div>`;
+}
+
+function buildWallet(){
+  const stamps=Array.from({length:10},(_,i)=>`<div class="stamp${i<7?' lit':''}">${i<7?'✦':''}</div>`).join('');
+  const txns=[
+    {i:'🍦',n:'Double Scoop — Lutz',s:'Today · +12 pts',v:'−$6.50',pos:false},
+    {i:'+',n:'Wallet Reload',s:'Apr 4',v:'+$25.00',pos:true},
+    {i:'◈',n:'Referral — Mike joined',s:'Apr 3',v:'+100 pts',pos:true,earn:true},
+    {i:'🍦',n:'Sundae — Wesley Chapel',s:'Apr 2 · +18 pts',v:'−$8.75',pos:false},
+  ];
+  const actions=[
+    {l:'Add Funds',i:SVG.plus,dark:true,bg:'rgba(250,247,242,0.1)',ic:'#FAF7F2',fn:`openSheet('reload')`},
+    {l:'Pay In Store',i:SVG.qr,dark:false,bg:'#EDE8DC',ic:'#1E3328',fn:`openSheet('qr')`},
+    {l:'Birthday',i:SVG.gift,dark:false,bg:'#FAEEDA',ic:'#854F0B',fn:`openSheet('birthday')`},
+    {l:'Redeem',i:SVG.star,dark:false,bg:'#EAF3EE',ic:'#0F6E56',fn:`goTab('rewards')`},
+  ];
+  return `
+    <div class="w-hero">
+      <div class="w-eye">Atelier Wallet</div>
+      <div class="w-bal"><sup>$</sup>24<span style="font-size:20px">.50</span></div>
+      <div class="w-foot">
+        <div><div class="w-name">Sagar · No. 00412</div><div style="font-size:9px;color:rgba(250,247,242,0.28);margin-top:2px;font-family:'Jost',sans-serif;letter-spacing:.05em">All locations</div></div>
+        <div class="w-tier">Gold</div>
+      </div>
+    </div>
+    <div class="act-grid">
+      ${actions.map(a=>`<button class="act-btn tap${a.dark?' dark':''}" onclick="${a.fn}">
+        <div class="act-ico" style="background:${a.bg}"><div style="width:16px;height:16px;stroke:${a.ic};color:${a.ic}">${a.i}</div></div>
+        <span class="act-lbl">${a.l}</span>
+      </button>`).join('')}
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div class="lbl">Points</div><div class="serif" style="font-size:28px;font-weight:500;color:#1A1A18;margin-top:2px">1,240</div></div>
+        <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:2px;font-family:'Jost',sans-serif;background:#FAEEDA;color:#633806;border:1px solid rgba(184,146,42,0.3);margin-top:2px">Gold Tier</div>
+      </div>
+      <div class="prog-track"><div class="prog-fill" style="width:62%"></div></div>
+      <div class="prog-labels"><span>Gold · 1,000</span><span>Platinum at 2,000</span></div>
+    </div>
+    <div class="card">
+      <div class="lbl" style="margin-bottom:8px">Stamp card — 7 of 10</div>
+      <div class="stamps">${stamps}</div>
+      <div style="font-size:10px;color:#8A8578;margin-top:8px;font-family:'Jost',sans-serif">3 more for a complimentary scoop</div>
+    </div>
+    <div class="txn-list">
+      <div class="txn-head">Transactions</div>
+      ${txns.map(t=>`<div class="txn">
+        <div class="txn-ico${t.earn?' earn':''}">${t.i}</div>
+        <div class="txn-info"><div class="txn-n">${t.n}</div><div class="txn-s">${t.s}</div></div>
+        <div class="txn-v ${t.pos?'pos':'neg'}">${t.v}</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+function buildRewards(){
+  const tiers=[
+    {i:'◇',n:'Founding',r:'Join',p:'1 pt / $1',a:false},
+    {i:'◈',n:'Reserve',r:'500 pts',p:'1.5 pts / $1',a:false},
+    {i:'◆',n:'Gold',r:'1,000 pts ✓',p:'2× weekends',a:true},
+    {i:'✦',n:'Platinum',r:'2,000 pts',p:'Secret menu',a:false},
+  ];
+  return `
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div><div class="lbl">Available</div><div class="serif" style="font-size:24px;font-weight:500;color:#1A1A18;margin-top:2px">1,240 pts</div></div>
+      <div style="text-align:right"><div class="lbl">Gold perk</div><div style="font-size:11px;color:#B8922A;margin-top:3px;font-family:'Jost',sans-serif">2× pts weekends</div></div>
+    </div>
+    <div class="sec-head">Redeem</div>
+    <div class="rew-grid">
+      ${REWARDS.map(r=>`<div class="rew-card tap${r.feat?' feat':''}${r.locked?' locked':''}" ${!r.locked?`onclick="openSheet('redeem','${r.name}',${r.pts})"`:''}>
+        ${r.feat?'<div class="feat-tag">Popular</div>':''}
+        ${r.locked?'<div class="lock-tag">Platinum</div>':''}
+        <div class="rew-ico">${r.icon}</div>
+        <div class="rew-name">${r.name}</div>
+        <div class="rew-pts">${r.pts} pts</div>
+      </div>`).join('')}
+    </div>
+    <div class="sec-head">Membership Tiers</div>
+    <div class="tier-table">
+      ${tiers.map(t=>`<div class="tier-row${t.a?' active':''}">
+        <span>${t.i} ${t.n} — ${t.r}</span>
+        <span class="tier-perk">${t.p}</span>
+      </div>`).join('')}
+    </div>`;
+}
+
+function buildFlavors(){
+  return `<div class="sec-head">Flavors & Secret Menu</div>
+    ${FLAVORS.map(f=>`<div class="fl-card">
+      <div class="fl-hero" style="background:${f.bg}">
+        <div class="fl-badge ${f.bs}">${f.b}</div>${f.e}
+      </div>
+      <div class="fl-body">
+        <div class="fl-name">${f.n}</div>
+        <div class="fl-desc">${f.d}</div>
+        <div class="fl-foot">
+          <div class="fl-loc">${f.l}</div>
+          <button class="fl-cta tap" onclick="openSheet('preorder','${f.n}')">${f.c}</button>
+        </div>
+      </div>
+    </div>`).join('')}`;
+}
+
+function buildStores(){
+  return `<div class="sec-head">Our Locations</div>
+    ${STORES.map(s=>`<div class="store-card">
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px">
+        <div class="store-mark" style="background:${s.bg}">◆</div>
+        <div>
+          <div class="store-nm">${s.n}</div>
+          <div class="store-ad">${s.a}</div>
+          <div class="open-pill">Open · Until 10 PM</div>
+        </div>
+      </div>
+      <div class="s-tags">${s.tags.map(t=>`<span class="s-tag">${t}</span>`).join('')}</div>
+      <button class="pay-btn tap" onclick="openSheet('qr')">Pay with Atelier Wallet</button>
+    </div>`).join('')}
+    <div class="card" style="text-align:center">
+      <div class="lbl" style="margin-bottom:5px">Universal Wallet</div>
+      <div class="serif" style="font-size:15px;font-weight:500;color:#1A1A18;line-height:1.5">One balance. Both locations.<br>Points earned everywhere.</div>
+    </div>`;
+}
+
+function buildProfile(){
+  const stats=[
+    {l:'Total Spend',v:'$248',s:'+$32 this month'},
+    {l:'Visits',v:'41',s:'3 this week'},
+    {l:'Rewards Used',v:'$18',s:'7 redemptions'},
+    {l:'Referrals',v:'3',s:'+300 pts earned'},
+  ];
+  const spendBars=[{l:'January',p:44,v:'$38'},{l:'February',p:28,v:'$24'},{l:'March',p:60,v:'$52'},{l:'April',p:37,v:'$32',a:true}];
+  const flBars=[{l:'Strawberry',p:80,v:'12×'},{l:'Chocolate',p:62,v:'10×'},{l:'Mint Chip',p:38,v:'6×'}];
+  const menu=[
+    {l:'Edit Profile',bg:'#EDE8DC',d:false},
+    {l:'Notification Preferences',bg:'#EDE8DC',d:false},
+    {l:'Connected Stores',bg:'#EDE8DC',d:false},
+    {l:'Sign Out',bg:'#FDECEA',d:true},
+  ];
+  function bars(title,data){
+    return `<div class="bar-sec">
+      <div class="bar-title">${title}</div>
+      ${data.map(b=>`<div class="brow">
+        <div class="blbl">${b.l}</div>
+        <div class="btrack"><div class="bfill" style="width:${b.p}%;${b.a?'background:#B8922A':''}"></div></div>
+        <div class="bval">${b.v}</div>
+      </div>`).join('')}
+    </div>`;
+  }
+  return `
+    <div class="prof-hero">
+      <div class="prof-av">SG</div>
+      <div class="prof-nm">Sagar</div>
+      <div class="prof-mem">Member No. 00412 · Since Jan 2024</div>
+      <div class="prof-tier">◆ Gold Member</div>
+    </div>
+    <div class="sec-head">Your Stats</div>
+    <div class="stats-grid">
+      ${stats.map(s=>`<div class="stat-c">
+        <div class="stat-lbl">${s.l}</div>
+        <div class="stat-val">${s.v}</div>
+        <div class="stat-sub">${s.s}</div>
+      </div>`).join('')}
+    </div>
+    ${bars('Monthly Spend',spendBars)}
+    ${bars('Favourite Flavours',flBars)}
+    <div class="sec-head">Referral Code</div>
+    <div class="ref-box tap" onclick="copyRef()">
+      <div class="lbl">Tap to copy</div>
+      <div class="ref-code">SAGAR50</div>
+      <div style="font-size:10px;color:#8A8578;font-family:'Jost',sans-serif;letter-spacing:.04em">Friend gets $5 · You earn 100 pts</div>
+      <div id="ref-copied" style="display:none;font-size:10px;color:#0F6E56;margin-top:5px;font-family:'Jost',sans-serif">Copied!</div>
+    </div>
+    <div class="sec-head">Account</div>
+    <div class="prof-menu">
+      ${menu.map((m,i)=>`<div class="menu-row tap${m.d?' danger':''}">
+        <div style="display:flex;align-items:center">
+          <div class="menu-ico" style="background:${m.bg}">${SVG.person}</div>
+          <span class="menu-txt">${m.l}</span>
+        </div>
+        <span style="color:${m.d?'#A32D2D':'#C8C3B8'};font-size:16px">›</span>
+      </div>`).join('')}
+    </div>`;
+}
+
+function buildInbox(){
+  const icoClass={warn:'ib-warn',ok:'ib-ok',dark:'ib-dark',neutral:'ib-neutral'};
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid rgba(30,51,40,0.12);margin-bottom:12px">
+      <div class="sec-head" style="border:none;padding:0;margin:0">Notifications</div>
+      <button style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8A8578;background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif">Mark all read</button>
+    </div>
+    ${NOTIFS.map(n=>`<div class="inbox-item${n.u?' unread':''}">
+      <div class="inbox-ico ${icoClass[n.s]}">${n.i}</div>
+      <div>
+        <div class="inbox-title">${n.t}</div>
+        <div class="inbox-body">${n.b}</div>
+        <div class="inbox-time">${n.ts}</div>
+      </div>
+    </div>`).join('')}`;
+}
+
+function buildSheet(type,arg1,arg2){
+  if(type==='reload') return `
+    <div class="sheet-title">Add Funds</div>
+    <div class="amt-row">
+      ${['$10','$25','$50'].map(a=>`<div class="amt-opt tap${selAmt===a?' sel':''}" onclick="selectAmt('${a}')">${a}</div>`).join('')}
+    </div>
+    <button id="reload-confirm-btn" class="sheet-btn tap" onclick="confirmReload()">Add ${selAmt} to Wallet</button>
+    <button class="sheet-btn out tap" onclick="closeSheet()">Cancel</button>
+    <div style="font-size:10px;color:#8A8578;text-align:center;margin-top:10px;font-family:'Jost',sans-serif">Non-refundable · Gold earns 2× pts weekends</div>`;
+  if(type==='qr') return `
+    <div class="qr-frame">
+      <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,247,242,0.4);margin-bottom:10px;font-family:'Jost',sans-serif">Present to Scooper</div>
+      <div class="qr-grid">${QR_PAT.map(c=>`<div class="qc${c?'':' w'}"></div>`).join('')}</div>
+      <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,247,242,0.4);margin-bottom:2px;font-family:'Jost',sans-serif">Balance</div>
+      <div class="serif" style="font-size:22px;font-weight:500;color:#FAF7F2">$24.50</div>
+    </div>
+    <div style="font-size:12px;color:#8A8578;text-align:center;margin-bottom:14px;line-height:1.6;font-family:'Jost',sans-serif">Valid at both Atelier Scoops locations.<br>Points credited automatically.</div>
+    <button class="sheet-btn out tap" onclick="closeSheet()">Done</button>`;
+  if(type==='birthday') return `
+    <div style="text-align:center;font-size:44px;margin-bottom:8px">◈</div>
+    <div class="sheet-title">A Gift for You, Sagar</div>
+    <div class="sheet-body">Your birthday reward is ready — a complimentary double scoop and $5 wallet credit. Valid at either location all month. Show this screen.</div>
+    <button class="sheet-btn tap" onclick="closeSheet()">Present at Counter</button>
+    <button class="sheet-btn out tap" onclick="closeSheet()">Close</button>`;
+  if(type==='redeem') return `
+    <div style="text-align:center;font-size:44px;margin-bottom:8px">◇</div>
+    <div class="sheet-title">${arg1}</div>
+    <div class="sheet-body">Show this screen at any Atelier Scoops location. ${arg2} points will be deducted. Our scoopers will take care of the rest.</div>
+    <button class="sheet-btn tap" onclick="closeSheet()">Present at Counter</button>
+    <button class="sheet-btn out tap" onclick="closeSheet()">Cancel</button>`;
+  if(type==='preorder') return `
+    <div style="text-align:center;font-size:44px;margin-bottom:8px">🍦</div>
+    <div class="sheet-title">Pre-Order Confirmed</div>
+    <div class="sheet-body">Your pre-order for <strong>${arg1}</strong> is confirmed. We'll notify you when ready. 10 bonus points added.</div>
+    <button class="sheet-btn tap" onclick="closeSheet()">Done</button>`;
+  return '';
+}
+
+// ── RENDER ENGINE ─────────────────────────────────────────────────────────
+function buildApp(){
+  const screenContent=showInbox?buildInbox()
+    :currentTab==='wallet'?buildWallet()
+    :currentTab==='rewards'?buildRewards()
+    :currentTab==='flavors'?buildFlavors()
+    :currentTab==='stores'?buildStores()
+    :buildProfile();
+
+  const bottomBar=showInbox
+    ?`<div class="inbox-back"><button onclick="closeInbox()">← Back</button></div>`
+    :buildBottomTabs();
+
+  return `
+    ${buildStatusBar()}
+    ${buildTopBar()}
+    <div class="scroll-area ns" id="scroll">${screenContent}</div>
+    ${bottomBar}
+    <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()">
+      <div class="sheet" onclick="event.stopPropagation()">
+        <div class="sheet-handle"></div>
+        <div id="sheet-content"></div>
+      </div>
+    </div>`;
+}
+
+function render(){
+  const html=buildApp();
+  const dt=document.getElementById('phone-desktop');
+  const mb=document.getElementById('phone-mobile');
+  if(dt) dt.innerHTML=html;
+  if(mb) mb.innerHTML=html;
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────
+function goTab(tab){
+  currentTab=tab;showInbox=false;
+  track('tab_switched',{tab});render();
+}
+function openInbox(){
+  showInbox=true;unread=0;
+  track('inbox_opened');render();
+}
+function closeInbox(){showInbox=false;render();}
+
+function openSheet(type,arg1,arg2){
+  render();
+  const overlay=document.getElementById('sheet-overlay')||document.querySelector('.sheet-overlay');
+  if(!overlay)return;
+  const content=overlay.querySelector('#sheet-content');
+  if(content)content.innerHTML=buildSheet(type,arg1,arg2);
+  overlay.classList.add('on');
+  track(type==='qr'?'qr_pay_opened':type==='reload'?'add_funds_opened':type==='redeem'?'reward_tapped':type==='birthday'?'birthday_opened':'flavor_preorder_tapped');
+}
+function closeSheet(){
+  document.querySelectorAll('.sheet-overlay').forEach(o=>o.classList.remove('on'));
+}
+function selectAmt(a){
+  selAmt=a;
+  document.querySelectorAll('.amt-opt').forEach(el=>{
+    el.classList.toggle('sel',el.textContent===a);
+  });
+  const btn=document.getElementById('reload-confirm-btn');
+  if(btn)btn.textContent=`Add ${a} to Wallet`;
+}
+function confirmReload(){
+  track('funds_added',{amount:selAmt});
+  alert(`${selAmt} added to your Atelier Wallet.`);
+  closeSheet();
+}
+function copyRef(){
+  navigator.clipboard.writeText('SAGAR50').catch(()=>{});
+  const el=document.getElementById('ref-copied');
+  if(el){el.style.display='block';setTimeout(()=>{if(el)el.style.display='none';},2000);}
+  track('referral_copied');
+}
+
+// ── SIDE PANEL FEATURES ───────────────────────────────────────────────────
+function buildSidePanel(){
+  const fl=document.getElementById('feature-list');
+  if(!fl)return;
+  fl.innerHTML=FEATURES.map(f=>`
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:9px">
+      <span style="font-size:13px;margin-top:1px;flex-shrink:0">${f.i}</span>
+      <span style="font-family:'Jost',sans-serif;font-size:13px;font-weight:300;color:rgba(250,247,242,0.65)">${f.t}</span>
+    </div>`).join('');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+render();
+buildSidePanel();
+track('app_opened');
+</script>
+
+<!-- Vercel Analytics (loads only when deployed to Vercel) -->
+<script>
+window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+
+</body>
+</html>
